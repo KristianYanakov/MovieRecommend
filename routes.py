@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-OMBD_API_KEY = os.getenv('OMBD_API_KEY')
+OMDB_API_KEY = os.getenv('OMDB_API_KEY')
 #OMDB_API_KEY = '12302140123' #from api get key in .env
 routes = Blueprint('routes', __name__)
 
