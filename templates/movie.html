@@ -1,20 +1,33 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title> {{ title }}</title>
-    </head>
-    <body>
-        <h1> {{ title }} </h1>
-        <p>Rating: {{ rating }}</p>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
+<body class="bg-dark text-white">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+        <div class="container">
+            <a class="navbar-brand" href="/">🎬 Movie Recommender</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5 text-center">
+        <h1 class="mb-4">{{ title }}</h1>
 
         {% if image_url %}
-            <img src="{{ image_url }}" alt="Movie Poster">
+            <img src="{{ image_url }}" alt="Poster for {{ title }}" class="img-fluid mb-4 rounded shadow">
         {% else %}
-            <p>No poster available!</p>
-            <img src="https://via.placeholder.com/300x450?text=No+Poster" alt="No poster">
+            <p><em>No image available</em></p>
         {% endif %}
 
-        <!--TEST WORKS-->
-        <!--<a href="/movie/100">click to go to movie 100</a>-->
-    </body>
+        <h4>Average User Rating: ⭐ {{ rating }}</h4>
+        <a href="/movies/" class="btn btn-outline-light mt-4">Back to All Movies</a>
+    </div>
+
+</body>
 </html>
