@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template
+from flask import Flask, Blueprint, render_template, jsonify
 from model import data
 import requests
 import os
@@ -47,3 +47,27 @@ def get_all_movies():
 
     movies = [{'title': t, 'rating': r} for t, r in zip(titles, ratings)]
     return render_template('movies_list.html', movies=movies)
+
+#API ENDPOINT ROUTES
+
+@routes.route('/api/movies/', methods = ['GET'])
+def api_get_all_movies():
+    movies = [
+        {'id': idx, 'title': row['title'], 'rating': row['rating']}
+        for idx, row in data.iterrows()
+    ]
+
+    return jsonify(movies)
+
+@routes.route('/api/movie/<int:movie_id>', methods = ['GET'])
+def api_get_movie(movie_id):
+    if 0 <= movie_id < len(data):
+        row = data.iloc[movie_id]
+        movie = {
+            'id': movie_id,
+            'title': row['title'],
+            'rating': row['rating']
+        }
+        return jsonify(movie)
+    else:
+        return jsonify({'message': 'Movie not found'}), 404
