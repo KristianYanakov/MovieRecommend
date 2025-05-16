@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> {{ title }}</title>
+    </head>
+    <body>
+        <h1> {{ title }} </h1>
+        <p>Rating: {{ rating }}</p>
+
+        {% if image_url %}
+            <img src="{{ image_url }}" alt="Movie Poster">
+        {% else %}
+            <p>No poster available!</p>
+            <img src="https://via.placeholder.com/300x450?text=No+Poster" alt="No poster">
+        {% endif %}
+
+        <!--TEST WORKS-->
+        <!--<a href="/movie/100">click to go to movie 100</a>-->
+    </body>
+</html>
