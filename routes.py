@@ -82,3 +82,14 @@ def get_recommendations_for_user(user_id):
         return render_template('recommendations.html', user_id=user_id, recommendations=recommendations_display_format)
     except IndexError:
         return f"User {user_id} not found", 404 #could render a 404 html
+
+#API ENDPOINTS FOR RECOMMENDATIONS
+@routes.route('/api/recommendations/<int:user_id>', methods = ["GET"])
+def get_all_recommedations(user_id):
+    try:
+        recommendations_all = get_recommendations(user_id, 5)
+        recommendations_display_format = [{"title": title, "predicted_rating": round(score, 2)} for title, score in recommendations_all]
+
+        return jsonify(recommendations_display_format)
+    except IndexError:
+        return f"User {user_id} not found", 404
