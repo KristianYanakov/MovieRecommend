@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommendations for User {{ user_id }}</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
+<body class="bg-dark text-white">
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">🎯 Recommendations for User {{ user_id }}</h1>
+
+        {% if recommendations %}
+        <ul class="list-group">
+            {% for rec in recommendations %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ rec.title }}
+                <span class="badge bg-primary rounded-pill">{{ rec.predicted_rating }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p class="text-center">No recommendations found.</p>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-outline-light">Back to Home</a>
+        </div>
+    </div>
+
+</body>
+</html>

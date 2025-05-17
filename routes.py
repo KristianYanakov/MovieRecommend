@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, render_template, jsonify
-from model import data
+from model import data, get_recommendations
 import requests
 import os
 from dotenv import load_dotenv
@@ -71,3 +71,14 @@ def api_get_movie(movie_id):
         return jsonify(movie)
     else:
         return jsonify({'message': 'Movie not found'}), 404
+
+#Recommendations
+@routes.route('/recommendations/<int:user_id>')
+def get_recommendations_for_user(user_id):
+    try:
+        recommendations_all = get_recommendations(user_id, 5)
+        recommendations_display_format = [{"title": title, "predicted_rating": round(score, 2)} for title, score in recommendations_all]
+
+        return render_template('recommendations.html', user_id=user_id, recommendations=recommendations_display_format)
+    except IndexError:
+        return f"User {user_id} not found", 404 #could render a 404 html
