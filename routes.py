@@ -38,7 +38,8 @@ def get_movie(movie_id):
         # return f'Movie {movie_id} : {title} {rating}'
         return render_template('movie.html', title=title, rating=rating, image_url=image_url)
     else:
-        return "Movie not found", 404
+        # return "Movie not found", 404
+        return render_template('404.html'), 404
 
 @routes.route('/movies/')
 def get_all_movies():
@@ -70,7 +71,8 @@ def api_get_movie(movie_id):
         }
         return jsonify(movie)
     else:
-        return jsonify({'message': 'Movie not found'}), 404
+        # return jsonify({'message': 'Movie not found'}), 404
+        return render_template('404.html'), 404
 
 #Recommendations
 @routes.route('/recommendations/<int:user_id>')
@@ -81,7 +83,8 @@ def get_recommendations_for_user(user_id):
 
         return render_template('recommendations.html', user_id=user_id, recommendations=recommendations_display_format)
     except IndexError:
-        return f"User {user_id} not found", 404 #could render a 404 html
+        return render_template('404.html'), 404
+        # return f"User {user_id} not found", 404 #could render a 404 html
 
 #API ENDPOINTS FOR RECOMMENDATIONS
 @routes.route('/api/recommendations/<int:user_id>', methods = ["GET"])
@@ -92,4 +95,9 @@ def get_all_recommedations(user_id):
 
         return jsonify(recommendations_display_format)
     except IndexError:
-        return f"User {user_id} not found", 404
+        return render_template('404.html'), 404
+        # return f"User {user_id} not found", 404
+
+@routes.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
