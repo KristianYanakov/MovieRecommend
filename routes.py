@@ -1,8 +1,9 @@
-from flask import Flask, Blueprint, render_template, jsonify
+from flask import Flask, Blueprint, render_template, jsonify, request, redirect, url_for
 from model import data, get_recommendations
 import requests
 import os
 from dotenv import load_dotenv
+from comment import Comment, db
 
 load_dotenv()
 
@@ -19,7 +20,11 @@ def home():
 def about():
     return "This is a Movie Recommender AI in which users can also put ratings for movies."
 
-@routes.route('/movie/<int:movie_id>')
+@routes.route('/info')
+def info():
+    return "Hello fellow Movie Enjoyer ;)"
+
+@routes.route('/movie/<int:movie_id>', methods = ['GET', 'POST'])
 def get_movie(movie_id):
     if 0 <= movie_id < len(data):
         title = data.iloc[movie_id]['title']
@@ -28,6 +33,21 @@ def get_movie(movie_id):
         # Strip off the year (e.g., "Toy Story (1995)" -> "Toy Story")
         clean_title = title.rsplit('(', 1)[0].strip()
 
+        #Comment Submission
+        if request.method == "POST":
+            username = request.form.get('username')
+            content = request.form.get('content')
+
+            if username and content:
+                new_comment = Comment(movie_title=title, username=username, content=content)
+                db.session.add(new_comment)
+                db.session.commit()
+                return redirect(url_for('routes.get_movie', movie_id=movie_id))
+
+        #load comments
+        comments = Comment.query.filter_by(movie_title=title).order_by(Comment.timestamp.desc()).all()
+
+        #Poster API CALL
         response = requests.get(f'http://www.omdbapi.com/?t={clean_title}&apikey={OMDB_API_KEY}')
         image_url = None
 
@@ -35,8 +55,9 @@ def get_movie(movie_id):
             result = response.json()
             image_url = result.get('Poster')
 
+
         # return f'Movie {movie_id} : {title} {rating}'
-        return render_template('movie.html', title=title, rating=rating, image_url=image_url)
+        return render_template('movie.html', title=title, rating=rating, image_url=image_url, comments=comments)
     else:
         # return "Movie not found", 404
         return render_template('404.html'), 404
